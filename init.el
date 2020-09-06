@@ -499,21 +499,26 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-
-
 ;; org-capture BEGIN
   (defun finding-location ()
     "Append to end of or create Org entry with date heading."
-    ;;(let ((heading (concat "* " (format-time-string "%Y-%m-%d %A")))) 
-    (let ((heading (concat "* " (concat (concat "[" (format-time-string "%Y-%m-%d %A")) "]"))))
+    (let ((heading (concat "* " (format-time-string "%Y-%m-%d %A")))
+      (misc "** misc"))
+    ;;(let ((heading (concat "* " (concat (concat "[" (format-time-string "%Y-%m-%d %A")) "]"))))
       (save-match-data
         (goto-char (point-min))
         (if (re-search-forward heading nil 'no-error)
-            (org-point-at-end-of-empty-headline)
+            (if (re-search-forward misc nil 'no-error)
+                (org-point-at-end-of-empty-headline)
+              (if (re-search-forward heading nil 'no-error)
+                  (insert misc)))
           ;; else
-            (goto-line 5)
-            (newline)
-            (insert heading)))))
+          (goto-char (point-min))
+          (if (re-search-forward "^$" nil 'no-error)
+              (newline))
+          (insert heading)
+          (newline)
+          (insert misc)))))
   (setq org-capture-templates
         `(
           ("m"
