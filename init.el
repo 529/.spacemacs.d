@@ -502,17 +502,6 @@ before packages are loaded."
 
 
 ;; org-capture BEGIN
-  (defun function-finding-location ()
-    "Append to end of or create Org entry with date heading."
-    ;;(let ((heading (concat "* " (concat (concat "[" (format-time-string "%Y-%m-%d %A")) "\]")))) 
-    (let ((heading (concat "* " (format-time-string "%Y-%m-%d %A")))) 
-      (save-match-data
-        (goto-char (point-min))
-        (unless (re-search-forward heading nil 'no-error)
-          (end-of-line)
-          (newline)
-          (insert heading))
-        (org-end-of-subtree))))
   (defun finding-location ()
     "Append to end of or create Org entry with date heading."
     ;;(let ((heading (concat "* " (format-time-string "%Y-%m-%d %A")))) 
@@ -544,7 +533,6 @@ before packages are loaded."
   (setq org-default-notes-file "~/org/notes.org")
   (setq org-return-follows-link t)
   ;; org-capture END
-
   ;; キャプチャをインラインへコピペ
   ;; https://dev.classmethod.jp/articles/org-mode-paste-show-clipboard-image/
   (defun my-org-screenshot ()
@@ -562,13 +550,10 @@ before packages are loaded."
     (if (file-exists-p filename)
         (insert (concat "[[file:" filename "]]")))
     (org-display-inline-images))
-  
   ;; end
-  
   ;; 見出しの初期状態（見出しだけ表示）
   (setq org-startup-folded 'content)
   ;; end
-  
   ;; 折り返し
   (setq org-startup-truncated nil)
   (defun change-truncation()
@@ -579,12 +564,7 @@ before packages are loaded."
            (setq truncate-lines nil))))
   ;; end
 
-
-
-
-
-
-  )
+)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
