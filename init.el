@@ -65,6 +65,9 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '()
 
+
+
+
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
@@ -171,7 +174,7 @@ It should only modify the values of Spacemacs settings."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'random
+   dotspacemacs-startup-banner 'official
 
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
@@ -484,6 +487,8 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  (setq-default left-margin-width 5 right-margin-width 3)
+  (setq org-image-actual-width nil)
   )
 
 (defun dotspacemacs/user-load ()
@@ -521,19 +526,18 @@ before packages are loaded."
           (insert misc)))))
   (setq org-capture-templates
         `(
+          ;;("m"
+          ;; "misc"
+          ;; entry
+          ;; (file+headline "~/Dropbox/org/misc.org" "MISC")
+          ;; "* %? %^T %i"
+          ;; :empty-lines 1)
           ("m"
            "misc"
            entry
-           (file+headline "~/Dropbox/org/misc.org" "MISC")
-           "* %? %^T %i"
-           :empty-lines 1)
-          ("w"
-           "work"
-           entry
-           (file+function "~/org/logs.org" finding-location)
+           (file+function "~/Dropbox/org/notes.org" finding-location)
            "** %? Entered on %U \n"
-           :kill-buffer t
-           :empty-line 1)))
+           :empty-line 2)))
   (setq org-agenda-files (list "~/Dropbox/org/"))
   (setq org-default-notes-file "~/org/notes.org")
   (setq org-return-follows-link t)
