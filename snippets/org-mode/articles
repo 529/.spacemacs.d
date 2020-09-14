@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: articles
+# key: art
+# --
+*** Articles
+**** Source: $0
+**** Tags: $1 
+**** Impressions:

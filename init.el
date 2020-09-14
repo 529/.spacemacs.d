@@ -489,6 +489,8 @@ It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq-default left-margin-width 5 right-margin-width 3)
   (setq org-image-actual-width nil)
+  (setq warning-suppress-types (quote ((yasnippet backquote-change))))
+  (setq system-time-locale "C")
   )
 
 (defun dotspacemacs/user-load ()
