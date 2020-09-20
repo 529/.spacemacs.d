@@ -32,7 +32,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(clojure
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -44,7 +44,7 @@ This function should only modify configuration layer settings."
      ;; git
      helm
      ;; lsp
-     ;; markdown
+     markdown
      multiple-cursors
      org
      ;; (shell :variables
@@ -63,10 +63,9 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '()
-
-
-
+   dotspacemacs-additional-packages
+   '(emoji-cheat-sheet-plus
+     )
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -487,10 +486,24 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  ;; 左右にmarginを
   (setq-default left-margin-width 5 right-margin-width 3)
   (setq org-image-actual-width nil)
+
+  ;; snippet 時の warning https://github.com/syl20bnr/spacemacs/issues/12648
+  (defvaralias 'helm-c-yas-space-match-any-greedy 'helm-yas-space-match-any-greedy "Temporary alias for Emacs27")
   (setq warning-suppress-types (quote ((yasnippet backquote-change))))
-  (setq system-time-locale "C")
+
+  ;; 曜日を英語表記
+  ;;(setq system-time-locale "C")
+  ;; org-mode だけに有効にするためには下記を参考にで良いのかしら
+  ;; https://ardggy.hatenablog.jp/entry/2015/10/16/232851
+  (defun org-mode-time-locale ()
+    (set (make-local-variable 'system-time-locale) "C"))
+  (add-hook 'org-mode-hook 'org-mode-time-locale)
+
+  ;; emoji
+  (add-hook 'org-mode-hook 'emoji-cheat-sheet-plus-display-mode)
   )
 
 (defun dotspacemacs/user-load ()
@@ -581,3 +594,22 @@ before packages are loaded."
 ;; auto-generate custom variable definitions.
 
 
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(emoji-cheat-sheet-plus mmm-mode markdown-toc markdown-mode gh-md yasnippet-snippets ws-butler writeroom-mode winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org symon symbol-overlay string-inflection spaceline-all-the-icons restart-emacs request rainbow-delimiters popwin pcre2el password-generator paradox overseer org-superstar org-projectile org-present org-pomodoro org-mime org-download org-cliplink org-brain open-junk-file nameless move-text macrostep lorem-ipsum link-hint indent-guide hybrid-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-ls-git helm-flx helm-descbinds helm-company helm-cider helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot fuzzy font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu emr elisp-slime-nav editorconfig dumb-jump dotenv-mode diminish devdocs define-word column-enforce-mode clojure-snippets clean-aindent-mode cider-eval-sexp-fu centered-cursor-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line ac-ispell)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+)
