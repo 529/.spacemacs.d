@@ -32,7 +32,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(clojure
+   '(javascript
+     clojure
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -504,7 +505,38 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; emoji
   (add-hook 'org-mode-hook 'emoji-cheat-sheet-plus-display-mode)
-  )
+
+  ;; org ファイルが更新されたら更新日時に更新
+  ;; https://emacs.stackexchange.com/questions/39348/org-auto-add-update-date-of-last-modification-of-heading-and-or-its-body-to
+  ;; 全ての bullet に PROPERTIES が設定されるやつでした。　参考にしつつ他の方法を考える。
+  ;; ファイルの更新日付を記録
+  (setq time-stamp-start "#+LAST UPDATED: ")
+  (setq time-stamp-format "%04y/%02m/%02d-%02H:%02M:%02S")
+  (setq time-stamp-end "$")
+  (if (not (memq 'time-stamp write-file-hooks))
+      (setq write-file-hooks
+            (cons 'time-stamp write-file-hooks)))
+
+  ;;
+  (defun 529/insert-time-stamp ()
+    "Insert TimeStamp"
+    (interactive)
+    (insert (current-time-string)))
+  ;; 更新日付をアップデートする TODO add-hook ファイルを保存するとき
+  (defun 529/upsert-modified-date ()
+    "upsert modified date"
+    (interactive)
+    (let ((modified "#+MODIFIED DATE:")
+          (modifieddate (concat "#+MODIFIED DATE: " (format-time-string "%Y-%m-%d %H:%M"))))
+      (goto-char (point-min))
+      (if (re-search-forward modified nil 'no-error)
+          ;; 更新する
+          (insert (current-time-string))
+        ;; else
+        (goto-char (point-min))
+        (if (re-search-forward "^$" nil 'no-error) 
+            (insert modifieddate))
+        ))))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -519,7 +551,9 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-;; org-capture BEGIN
+  ;; 画像サイズを固定
+  (setq org-image-actual-width 600)
+  ;; org-capture BEGIN
   (defun finding-location ()
     "Append to end of or create Org entry with date heading."
     (let ((heading (concat "* " (format-time-string "%Y-%m-%d %A")))
@@ -573,6 +607,7 @@ before packages are loaded."
     (shell-command (concat "pngpaste " filename))
     (if (file-exists-p filename)
         (insert (concat "[[file:" filename "]]")))
+    (setq org-image-actual-width 600)
     (org-display-inline-images))
   ;; end
   ;; 見出しの初期状態（見出しだけ表示）
@@ -605,7 +640,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(emoji-cheat-sheet-plus mmm-mode markdown-toc markdown-mode gh-md yasnippet-snippets ws-butler writeroom-mode winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org symon symbol-overlay string-inflection spaceline-all-the-icons restart-emacs request rainbow-delimiters popwin pcre2el password-generator paradox overseer org-superstar org-projectile org-present org-pomodoro org-mime org-download org-cliplink org-brain open-junk-file nameless move-text macrostep lorem-ipsum link-hint indent-guide hybrid-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-ls-git helm-flx helm-descbinds helm-company helm-cider helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot fuzzy font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu emr elisp-slime-nav editorconfig dumb-jump dotenv-mode diminish devdocs define-word column-enforce-mode clojure-snippets clean-aindent-mode cider-eval-sexp-fu centered-cursor-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line ac-ispell)))
+   '(web-beautify tide typescript-mode tern prettier-js nodejs-repl livid-mode skewer-mode js2-refactor multiple-cursors js2-mode js-doc import-js grizzl impatient-mode simple-httpd helm-gtags ggtags dap-mode posframe lsp-treemacs bui lsp-mode dash-functional counsel-gtags counsel swiper ivy add-node-modules-path emoji-cheat-sheet-plus mmm-mode markdown-toc markdown-mode gh-md yasnippet-snippets ws-butler writeroom-mode winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org symon symbol-overlay string-inflection spaceline-all-the-icons restart-emacs request rainbow-delimiters popwin pcre2el password-generator paradox overseer org-superstar org-projectile org-present org-pomodoro org-mime org-download org-cliplink org-brain open-junk-file nameless move-text macrostep lorem-ipsum link-hint indent-guide hybrid-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org-rifle helm-org helm-mode-manager helm-make helm-ls-git helm-flx helm-descbinds helm-company helm-cider helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot fuzzy font-lock+ flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu emr elisp-slime-nav editorconfig dumb-jump dotenv-mode diminish devdocs define-word column-enforce-mode clojure-snippets clean-aindent-mode cider-eval-sexp-fu centered-cursor-mode auto-yasnippet auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line ac-ispell)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
