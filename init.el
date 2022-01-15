@@ -32,7 +32,9 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(rust
+   '(csv
+     yaml
+     rust
      sql
      html
      javascript
@@ -81,6 +83,7 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(emoji-cheat-sheet-plus
+     super-save
      )
 
    ;; A list of packages that cannot be updated.
@@ -566,6 +569,8 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  ;; 環境変数を更新（.spacemacs.envを書き換える）
+  (spacemacs/force-init-spacemacs-env)
   ;; 画像サイズを固定
   (setq org-image-actual-width 600)
   ;; org-capture BEGIN
@@ -637,7 +642,13 @@ before packages are loaded."
           (t
            (setq truncate-lines nil))))
   ;; end
-
+  ;; super-save start
+  (use-package super-save
+    :config
+    (setq super-save-auto-save-when-idle t
+          super-save-idle-duration 5)
+    (super-save-mode +1))
+  ;; super-save end
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
