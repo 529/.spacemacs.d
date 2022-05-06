@@ -44,6 +44,7 @@ This function should only modify configuration layer settings."
               cider-repl-use-clojure-font-lock t
               cider-repl-result-prefix ";;=> "
               cider-repl-use-pretty-printing t
+              clojure-enable-linters '(clj-kondo joker)
               ) 
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -649,6 +650,17 @@ before packages are loaded."
           super-save-idle-duration 5)
     (super-save-mode +1))
   ;; super-save end
+  ;; for nbb to use cljs start
+  ;; https://github.com/clojure-emacs/cider/issues/3061
+  (with-eval-after-load 'cider
+    (cider-register-cljs-repl-type 'nbb "(+ 1 2 3)"))
+  (defun 529/cider-connected-hook ()
+    (when (eq 'nbb cider-cljs-repl-type)
+      (setq-local cider-show-error-buffer nil)
+      (cider-set-repl-type 'cljs)))
+
+  (add-hook 'cider-connected-hook #'529/cider-connected-hook)
+  ;; for nbb to use cljs end
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
